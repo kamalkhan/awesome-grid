@@ -8,7 +8,7 @@
 <script src="/path/to/jquery.js"></script>
 <script src="/path/to/awesome-grid.min.js"></script>
 ```
-2.
+2. Apply a grid layout to any element using the following code. Adjust the settings upon your discretion.
 ```
 <script>
     $('ul.grid img').load(function(){
