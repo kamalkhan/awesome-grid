@@ -30,3 +30,5 @@
     });
 </script>
 ```
+<h2>License</h2>
+This plugin is licensed under MIT. Feel free to use it in commercial projects as long as the copyright notices are intact.
