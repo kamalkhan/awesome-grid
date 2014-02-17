@@ -1,0 +1,42 @@
+
+body {
+    font-size: 14px;
+    line-height: 21px;
+    font-family: "Helvetica Neue", helvetica, arial, sans-serif;
+}
+
+.title h1 {
+    margin-top: 42px;
+    text-align: center;
+}
+.title h1 span {
+    color: #aaa;
+}
+
+ul.grid {
+    list-style: none;
+    margin: 42px auto;
+    padding: 0;
+    max-width: 794px;
+}
+ul.grid li {
+    width: 160px;
+    padding: 14px;
+    background-color: #f4f4f4;
+    border: 1px dashed #d7d7d7;
+    color: #525252;
+    text-align: center;
+    text-shadow: 1px 1px 1px #fff;
+}
+ul.grid li img {
+    margin-top: 14px;
+    display:block;
+    max-width:100%;
+    height:auto;
+}
+ul.grid li code {
+    background-color: #D8F6C0;
+    padding: 4px;
+    border: 1px dashed #9CCA77;
+    border-radius: 4px;
+}

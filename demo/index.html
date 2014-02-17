@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Awesome Grid</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Stylesheets -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="title">
+        <h1>Awesome Grid <span>Demo</span></h1>
+    </div>
+    <ul class="grid">
+        <li><h1>01</h1>Zero One
+            <p>
+                Awesome Grid allows you to easily layout an awesome grid
+                like the one you see here. The grid is responsive which
+                means it will adapt to the screen size
+            </p>
+        </li>
+        <li><h1>02</h1>Zero Two
+            <p>
+                It is a javascript file (minified version) of just 2kb.
+            </p>
+        </li>
+        <li><h1>03</h1>Zero Three
+            <p>
+                Licensed under the MIT. You are free to use it in commercial
+                projects.
+            </p>
+        </li>
+        <li><h1>04</h1>Zero Four
+            <p>
+                <a href="http://kamalkhan.github.io/awesome-grid/" target="_blank">Download</a>
+            </p>
+        </li>
+        <li><h1>05</h1>Zero Five</li>
+        <li data-x="2"><h1>06</h1>Zero Six
+            <p>
+                You can widen an item at your choice by providing a
+                data-x attribute to the item. <br /><br />
+                <code>&lt;li data-x="2"&gt;...&lt;/li&gt;</code>
+            </p>
+        </li>
+        <li><h1>07</h1>Zero Seven</li>
+        <li><h1>08</h1>Zero Eigth<br /><img src="images/02.png" /></li>
+        <li><h1>09</h1>Zero Nine</li>
+        <li><h1>10</h1>One Zero</li>
+        <li><h1>11</h1>One One</li>
+        <li><h1>12</h1>One Two</li>
+        <li><h1>13</h1>One Three</li>
+        <li><h1>14</h1>One Four</li>
+        <li><h1>15</h1>One Five</li>
+    </ul>
+
+    <!-- Stylesheets -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/awesome-grid.min.js"></script>
+    <script>
+        $('ul.grid img').load(function(){
+            $('ul.grid').AwesomeGrid({
+                rowSpacing  : 14,
+                colSpacing  : 14,
+                columns     : {
+                    'defaults' : 4,
+                    '800' : 2
+                }
+            });
+        });
+    </script>
+</body>
+</html>
