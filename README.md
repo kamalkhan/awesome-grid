@@ -2,6 +2,8 @@
 <p>
     A jQuery plugin that allows you to display a responsive grid layout stacked on top of each other into rows and columns
 </p>
+<h2>View Demo</h2>
+You can view the demo by <a href="http://bhittani.com/jquery-plugins/awesome-grid/">visiting here</a>
 <h2>Usage</h2>
 1. Link to the scripts
 ```
