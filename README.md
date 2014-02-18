@@ -33,4 +33,4 @@ You can view the demo by <a href="http://bhittani.com/jquery-plugins/awesome-gri
 </script>
 ```
 <h2>License</h2>
-This plugin is licensed under MIT License. Feel free to use it in commercial projects as long as the copyright notices are intact.
+This plugin is licensed under <a href="http://opensource.org/licenses/MIT" target="_blank">MIT License</a>. Feel free to use it in commercial projects as long as the copyright notices are intact.
