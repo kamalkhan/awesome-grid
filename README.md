@@ -13,7 +13,7 @@ You can view the demo by <a href="http://bhittani.com/jquery-plugins/awesome-gri
 2. Apply a grid layout to any element using the following code. Adjust the settings upon your discretion.
 ```
 <script>
-    $('ul.grid img').load(function(){
+    $(window).load(function(){
         $('ul.grid').AwesomeGrid({
             rowSpacing  : 20,                // row gutter spacing
             colSpacing  : 20,                // column gutter spacing
