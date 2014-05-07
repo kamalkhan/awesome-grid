@@ -56,6 +56,7 @@ THE SOFTWARE.
             var self = this;
             var columns = 2;
             var set = false;
+            var mediaQuery = false;
             if(!parseInt(self.options.columns))
             {
                 $.each((self.options.columns), function(key, val){
