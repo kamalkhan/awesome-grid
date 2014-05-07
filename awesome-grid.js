@@ -61,8 +61,11 @@ THE SOFTWARE.
                 $.each((self.options.columns), function(key, val){
                     if(parseInt(key) && (window.innerWidth <= parseInt(key)))
                     {
-                        columns = parseInt(val);
-                        set = true;
+                        if (!mediaQuery || mediaQuery > parseInt(key)) {
+                            columns = parseInt(val);
+                            set = true;
+                            mediaQuery = parseInt(key);
+                        }
                     }
                 });
                 if(!set)
