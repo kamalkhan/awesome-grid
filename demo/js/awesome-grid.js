@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 M. Kamal Khan <http://bhittani.com/jquery-plugins/awesome-grid/>
+Copyright (c) 2014 M. Kamal Khan <http://bhittani.com/jquery/awesome-grid/>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ THE SOFTWARE.
 
         _widthGrid : 0,
         _widthItem : 0,
+        _ColumnsArr : [],
         _Columns : [],
         _$items : null,
 
@@ -38,6 +39,8 @@ THE SOFTWARE.
             self.elem = elem;
             self.$elem = $(elem);
             self.options = $.extend({}, $.fn.AwesomeGrid.options, options);
+
+            self._ColumnsArr = self.sort(self.options.columns);
 
             self.extract();
             self.layout();
@@ -51,29 +54,57 @@ THE SOFTWARE.
             }
         },
 
+        sort : function(obj)
+        {
+            var defaults = 2;
+            var arr = [];
+            var i = 0;
+            $.each(obj, function(key, val){
+                val = parseInt(val);
+                if(parseInt(key))
+                {
+                    key = parseInt(key);
+                    if(!i)
+                    {
+                        arr[i] = [];
+                        arr[i][0] = key;
+                        arr[i][1] = val;
+                    }
+                    var j = i-1;
+                    while(j >= 0 && key > arr[j][0])
+                    {
+                        arr[j+1] = [];
+                        arr[j+1][0] = arr[j][0];
+                        arr[j+1][1] = arr[j][1];
+                        arr[j][0] = key;
+                        arr[j][1] = val;
+                        j--;
+                    }
+                    i++;
+                }
+                else if(key == 'defaults')
+                {
+                    defaults = val;
+                }
+            });
+            arr.push(defaults);
+            return arr;
+        },
+
         get_columns : function()
         {
             var self = this;
-            var columns = 2;
-            var set = false;
-            if(!parseInt(self.options.columns))
+
+            var C = self._ColumnsArr;
+            var columns = C[C.length - 1];
+            for(var i = 0; i < C.length; i++)
             {
-                $.each((self.options.columns), function(key, val){
-                    if(parseInt(key) && (window.innerWidth <= parseInt(key)))
-                    {
-                        columns = parseInt(val);
-                        set = true;
-                    }
-                });
-                if(!set)
+                if(C[i][0] && (window.innerWidth <= C[i][0]))
                 {
-                    columns = parseInt(self.options.columns.defaults) ? (self.options.columns.defaults) : 2;
+                    columns = C[i][1];
                 }
             }
-            else
-            {
-                columns = parseInt(self.options.columns) ? self.options.columns : 2;
-            }
+
             return columns;
         },
 
