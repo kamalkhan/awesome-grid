@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-(function($, window, document, undefined){
+(function($){
     "use strict";
 
     var AwesomeGridObj = {
@@ -52,6 +52,12 @@ THE SOFTWARE.
                     self.layout();
                 });
             }
+
+            // listen for new items...
+            self.$elem.on('ag-add', function(event, item){
+                self.$elem.append(item);
+                self.add_one(item);
+            });
         },
 
         sort : function(obj)
@@ -129,7 +135,6 @@ THE SOFTWARE.
             self.$elem.css('position', 'relative');
         },
 
-
         smallest : function()
         {
             var self = this;
@@ -165,57 +170,61 @@ THE SOFTWARE.
         layout : function()
         {
             var self = this;
-            var item, top, size, I;
             self._$items.each( function(index, element){
-                item = $(this);
-                if(!(self.options.hiddenClass && item.hasClass(self.options.hiddenClass)))
+                self.add_one($(this));
+            });
+        },
+
+        add_one : function(item)
+        {
+            var self = this;
+            var top, size, I;
+            if(!(self.options.hiddenClass && item.hasClass(self.options.hiddenClass)))
+            {
+                item.outerWidth(self._widthItem);
+                I = [];
+                I[0] = self.smallest();
+                size = item.data('x');
+                if(size)
                 {
-                    item.outerWidth(self._widthItem);
-                    I = [];
-                    I[0] = self.smallest();
-                    size = item.data('x');
-                    if(size)
+                    size = (size >= self._Columns.length) ? self._Columns.length : size;
+                    item.outerWidth( (self._widthItem * size) + ((size-1)*self.options.colSpacing));
+                    if((I[0] + size) >= self._Columns.length)
                     {
-                        size = (size >= self._Columns.length) ? self._Columns.length : size;
-                        item.outerWidth( (self._widthItem * size) + ((size-1)*self.options.colSpacing));
-                        if((I[0] + size) >= self._Columns.length)
-                        {
-                            I[0] -= (I[0] + size - self._Columns.length);
-                        }
-                        for(var i = 1; i < size; i++)
-                        {
-                            I[i] = I[i-1]+1;
-                        }
+                        I[0] -= (I[0] + size - self._Columns.length);
                     }
-
-                    top = self._Columns[I[self.largest(I)]].height
-                        + (self._Columns[I[self.largest(I)]].height == 0
-                           ? self.options.initSpacing
-                           : self.options.rowSpacing);
-                    item.css({
-                        position : 'absolute',
-                        left : self._Columns[I[0]].left,
-                        top : top +'px'
-                    }).addClass('ag-col-'+(I[0]+1));
-
-                    for(var x = 0; x < I.length; x++)
+                    for(var i = 1; i < size; i++)
                     {
-                        self._Columns[I[x]].height = top + item.outerHeight();
-                        self.$elem.height(self._Columns[I[x]].height);
-                    }
-
-                    if(self.options.fadeIn)
-                    {
-                        item.fadeIn('fast');
-                    }
-
-                    if(self.options.onReady)
-                    {
-                        self.options.onReady(item);
+                        I[i] = I[i-1]+1;
                     }
                 }
 
-            });
+                top = self._Columns[I[self.largest(I)]].height
+                    + (self._Columns[I[self.largest(I)]].height == 0
+                       ? self.options.initSpacing
+                       : self.options.rowSpacing);
+                item.css({
+                    position : 'absolute',
+                    left : self._Columns[I[0]].left,
+                    top : top +'px'
+                }).addClass('ag-col-'+(I[0]+1));
+
+                for(var x = 0; x < I.length; x++)
+                {
+                    self._Columns[I[x]].height = top + item.outerHeight();
+                    self.$elem.height(self._Columns[I[x]].height);
+                }
+
+                if(self.options.fadeIn)
+                {
+                    item.fadeIn('fast');
+                }
+
+                if(self.options.onReady)
+                {
+                    self.options.onReady(item);
+                }
+            }
         }
 
     };
@@ -243,4 +252,4 @@ THE SOFTWARE.
         onReady     : function(item){}
     };
 
-})(jQuery, window, document);
+})(jQuery);

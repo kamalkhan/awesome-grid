@@ -13,6 +13,7 @@ You can view the [demo here](http://bhittani.com/jquery/awesome-grid)
 <script src="/path/to/jquery.js"></script>
 <script src="/path/to/awesome-grid.min.js"></script>
 ```
+
 2. Apply a grid layout to any element using the following code. Adjust the settings upon your discretion.
 ```
 <script>
@@ -25,7 +26,7 @@ You can view the [demo here](http://bhittani.com/jquery/awesome-grid)
             fadeIn      : true,              // allow fadeIn effect for an element?
             hiddenClass : false,             // ignore an element having this class or false for none
             item        : 'li',              // item selector to stack on the grid
-            onReady     : function(item){}   // callback fired when an element is stacked
+            onReady     : function(item){},  // callback fired when an element is stacked
             columns     : {                  // supply an object to display columns based on the viewport
                 'defaults' : 4,              // default number of columns
                 '800'      : 2               // when viewport <= 800, show 2 columns
@@ -35,6 +36,12 @@ You can view the [demo here](http://bhittani.com/jquery/awesome-grid)
     });
 </script>
 ```
+
+3. To dynamically add a new item to the grid,
+```
+$('ul.grid').trigger('ag-add', [$('<li>Hello World</li>')]);
+```
+The above code will add `<li>Hello World</li>` to the grid `ul.grid`.
 
 ## License
 
