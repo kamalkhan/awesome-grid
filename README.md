@@ -1,10 +1,13 @@
-<h1>Awesome Grid</h1>
-<p>
-    A jQuery plugin that allows you to display a responsive grid layout stacked on top of each other into rows and columns
-</p>
-<h2>View Demo</h2>
-You can view the demo by <a href="http://bhittani.com/jquery/awesome-grid/">visiting here</a>
-<h2>Usage</h2>
+Awesome Grid
+======
+A jQuery plugin that allows you to display a responsive grid layout stacked on top of each other into rows and columns.
+
+## View Demo
+
+You can view the [demo here](http://bhittani.com/jquery/awesome-grid)
+
+## Usage
+
 1. Link to the scripts
 ```
 <script src="/path/to/jquery.js"></script>
@@ -32,5 +35,7 @@ You can view the demo by <a href="http://bhittani.com/jquery/awesome-grid/">visi
     });
 </script>
 ```
-<h2>License</h2>
-This plugin is licensed under <a href="http://opensource.org/licenses/MIT" target="_blank">MIT License</a>. Feel free to use it in commercial projects as long as the copyright notices are intact.
+
+## License
+
+This plugin is licensed under [MIT License](http://opensource.org/licenses/MIT). Feel free to use it in commercial projects as long as the copyright notices are intact.
