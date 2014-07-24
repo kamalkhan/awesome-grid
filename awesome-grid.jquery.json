@@ -1,0 +1,26 @@
+{
+	"name": "awesome-grid",
+	"version": "1.0.1",
+	"title": "Display elements in a grid view stacked on top of each other and masonry fashion",
+	"author": {
+		"name": "M. Kamal Khan",
+		"email": "shout@bhittani.com",
+		"url": "http://bhittani.com"
+	},
+	"licenses": [
+	    {
+	        "type": "MIT",
+	        "url": "http://opensource.org/licenses/MIT"
+	    }
+	],
+	"dependencies": {
+	    "jquery": ">=1.7"
+    },
+	"keywords": [
+        "grid",
+        "masonry"
+    ],
+	"bugs": "https://github.com/kamalkhan/awesome-grid/issues",
+    "homepage": "https://github.com/kamalkhan/awesome-grid",
+    "docs": "https://github.com/kamalkhan/awesome-grid"
+}
