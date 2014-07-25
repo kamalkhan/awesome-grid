@@ -105,9 +105,12 @@ THE SOFTWARE.
 
             var C = self._ColumnsArr;
             var columns = C[C.length - 1];
+            var context = self.options.context == 'self'
+            ? self.$elem.width()
+            : window.innerWidth;
             for(var i = 0; i < C.length; i++)
             {
-                if(C[i][0] && (window.innerWidth <= C[i][0]))
+                if(C[i][0] && (context <= C[i][0]))
                 {
                     columns = C[i][1];
                 }
@@ -247,6 +250,7 @@ THE SOFTWARE.
         colSpacing  : 20,
         initSpacing : 0,
         columns     : 2,
+        context     : 'window',
         responsive  : true,
         fadeIn      : true,
         hiddenClass : false,
