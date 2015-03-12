@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-AwesomeGrid v1.0.2
+AwesomeGrid v1.0.3
 
 Copyright (c) 2014 M. Kamal Khan <http://bhittani.com/jquery/awesome-grid/>
 
