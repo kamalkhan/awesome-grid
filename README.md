@@ -6,6 +6,10 @@ A jQuery plugin that allows you to display a responsive grid layout stacked on t
 
 You can view the [demo here](http://bhittani.com/jquery/awesome-grid)
 
+## Install
+
+`bower install awesome-grid --save`
+
 ## Usage
 
 1. Link to the scripts
