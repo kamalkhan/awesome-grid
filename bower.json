@@ -1,0 +1,23 @@
+{
+  "name": "awesome-grid",
+  "main": "awesome-grid.js",
+  "version": "1.0.3",
+  "homepage": "https://github.com/kamalkhan/awesome-grid",
+  "authors": [
+    "Kamal Khan <shout@bhittani.com>"
+  ],
+  "description": "A jQuery plugin that allows you to display a responsive grid layout stacked on top of each other into rows and columns.",
+  "keywords": [
+    "grid",
+    "masonry",
+    "layout"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
