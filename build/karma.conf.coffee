@@ -40,6 +40,12 @@ module.exports = (config) ->
         exclude: []
 
 
+        coffeePreprocessor:
+            # options passed to the coffee compiler
+            options:
+                bare: no,
+                sourceMap: no
+
         # preprocess matching files before serving them to the browser
         # available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors:
