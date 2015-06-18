@@ -1,4 +1,2 @@
 .DS_Store
-buglify.json
-bower_components
-test
+node_modules
