@@ -1,0 +1,25 @@
+{
+  "name": "awesome-grid",
+  "version": "2.0.0-alpha",
+  "description": "A minimalist javascript library that allows you to display a responsive grid layout stacked on top of each other into rows and columns.",
+  "main": "awesome-grid.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kamalkhan/awesome-grid.git"
+  },
+  "keywords": [
+    "grid",
+    "masonry",
+    "layout",
+    "responsive"
+  ],
+  "author": "kamalkhan <kamal@bhittani.com> (http://bhittani.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kamalkhan/awesome-grid/issues"
+  },
+  "homepage": "https://github.com/kamalkhan/awesome-grid"
+}
