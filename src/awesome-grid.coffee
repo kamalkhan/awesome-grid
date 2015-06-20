@@ -156,11 +156,11 @@ class window.AwesomeGrid
     stop : ->
         @watch no
 
-# Support AMD (requirejs)
-if (typeof window.define is 'function') and window.define.amd
-    window.define 'AwesomeGrid', [], -> window.AwesomeGrid
-
 # Launch grids based on data-attribute
 # Fails under test for reasons yet unknown
 for el in (document.querySelectorAll '[data-awesome-grid]')
     (new AwesomeGrid el, yes).grid el.getAttribute 'data-awesome-grid'
+
+# Support AMD (requirejs)
+if (typeof window.define is 'function') and window.define.amd
+    window.define 'AwesomeGrid', [], -> window.AwesomeGrid
