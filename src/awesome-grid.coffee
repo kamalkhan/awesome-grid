@@ -1,3 +1,11 @@
+###
+AwesomeGrid v2.0.0
+http://bhittani.com/javascript/awesome-grid
+A minimalist javascript library that allows you to display a responsive grid
+layout stacked on top of each other into rows and columns.
+The MIT License (MIT)
+Copyright (c) 2015 M. Kamal Khan <shout@bhittani.com>
+###
 class window.AwesomeGrid
 
     __els : []
@@ -95,6 +103,7 @@ class window.AwesomeGrid
         for el in @__els
             # columns
             @__columns = (0 for [1..columns])
+            rows = @_clone @__columns
             # data-ag-gutters
             gutters = @_clone @__gutters
             if not @__gutters.force
@@ -125,9 +134,16 @@ class window.AwesomeGrid
                 child.style.width = "#{w - s.pl - s.pr - s.bl - s.br}px"
                 child.style.top   = "#{@__columns[tallest]}px"
                 child.style.left  = "#{left}px"
-                child.className   = "#{@_clearClass child}ag-col-#{c+1}"
+                child.className   = @_clearClass child
                 @__columns[tallest] = @__columns[tallest] + child.offsetHeight + @__gutters.row
+                space = ''
+                tr = []
                 for ci in [c..(c + size - 1)]
+                    child.className += "#{space}ag-col-#{ci+1}"
+                    child.className += " ag-row-#{rows[ci]+1}" if (tr.indexOf rows[ci]) < 0
+                    tr.push rows[ci]
+                    rows[ci]++
+                    space = ' '
                     @__columns[ci] = @__columns[tallest]
 
                 el.style.height = "#{@__columns[@_giant()]}px"
@@ -155,6 +171,7 @@ class window.AwesomeGrid
 
     stop : ->
         @watch no
+        @
 
 # Launch grids based on data-attribute
 # Fails under test for reasons yet unknown

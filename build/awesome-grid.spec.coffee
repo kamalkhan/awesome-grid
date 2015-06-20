@@ -128,13 +128,13 @@ describe 'AwesomeGrid', ->
         ($j 'ul.with-stretch > li').each (i, el) ->
             if i is 0
                 (expect ($j @).outerWidth()).toBe 200
-                (expect $j @).toHaveClass 'ag-col-1'
+                (expect $j @).toHaveClass 'ag-col-1 ag-row-1 ag-col-2'
                 (expect $j @).toHaveCss
                     top: '0px'
                     left: '0px'
             else if i is 3
                 (expect ($j @).outerWidth()).toBe 300
-                (expect $j @).toHaveClass 'ag-col-3'
+                (expect $j @).toHaveClass 'ag-col-3 ag-row-2 ag-col-4 ag-col-5'
                 (expect $j @).toHaveCss
                     top: "#{($j @).outerHeight()}px"
                     left: '200px'
