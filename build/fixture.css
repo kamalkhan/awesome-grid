@@ -1,5 +1,6 @@
 ul {
     width: 500px;
+    display: block;
     list-style: none;
     margin: 2rem auto;
     padding: 0;
