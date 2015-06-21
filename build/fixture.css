@@ -12,3 +12,6 @@ li {
     border: 1px solid #dadada;
     border-radius: 4px;
 }
+ul.responsive {
+    width: 100%;
+}

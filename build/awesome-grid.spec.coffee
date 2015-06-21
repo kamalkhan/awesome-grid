@@ -8,18 +8,24 @@ beforeEach ->
     loadStyleFixtures 'fixture.css'
     $el = $j 'ul.grid'
     $li = $el.find '>li'
+
 describe 'ul.grid', ->
+
     it 'should be in the DOM', ->
         (expect $el[0]).toBeInDOM()
     it 'should be 500px wide', ->
         (expect $el.width()).toBe 500
+
 describe 'ul.grid > li', ->
+
     it 'should be a total of 5', ->
         (expect $li.length).toBe 5
     it 'should each be 500px wide', ->
         $li.each (i, el) ->
             (expect ($j @).outerWidth()).toBe 500
+
 describe 'AwesomeGrid', ->
+
     it 'should be defined', ->
         (expect window.AwesomeGrid).toBeDefined()
     Grid = null
@@ -38,6 +44,11 @@ describe 'AwesomeGrid', ->
                 marginBottom: '0px'
                 marginLeft:   '0px'
                 marginRight:  '0px'
+
+describe 'Generally', ->
+
+    Grid = null
+    beforeEach -> Grid = (new AwesomeGrid 'ul.grid')
     it 'should spread children into * number of columns using .grid([int])', ->
         Grid.grid 5
         $li.each (i, el) ->
@@ -79,6 +90,15 @@ describe 'AwesomeGrid', ->
                 left: "#{(ii*160)+(ii*10)}px"
             ii++
             if i is 2 then ii = 0
+    it 'should silently fail if DOM selector isn\'t found', (done) ->
+        (new AwesomeGrid 'ul.invalid')
+        .gutters
+            column : 10
+            row    : 10
+        .grid 5
+        done()
+
+describe 'With the help of data-ag-* attributes', ->
     it 'should allow for adding gutters using data attributes', ->
         (new AwesomeGrid 'ul.with-gutters1').grid 3
         ii = 0
@@ -141,23 +161,97 @@ describe 'AwesomeGrid', ->
             else
                 (expect $j @).toHaveClass (if i is 4 then 'ag-col-1' else "ag-col-#{i+2}")
     ###
-    TODO: Fails under test for reasons yet unknown
-    it 'should also work via data attribute data-awesome-grid="[int]"', ->
-        ($j 'ul[data-awesome-grid="5"] > li').each (i, el) ->
+    # Omit this test for now. Does not play well in test case.
+    it 'should work via data attribute data-awesome-grid="[int]"', (done) ->
+        window.addEventListener 'load', ->
+            ($j 'ul[data-awesome-grid="5"] > li').each (i, el) ->
+                (expect ($j @).outerWidth()).toBe 100
+                (expect $j @).toHaveClass "ag-col-#{i+1}"
+                (expect $j @).toHaveCss
+                    top: '0px'
+                    left: "#{i*100}px"
+            done()
+    ###
+
+describe 'When using a mobile (screen)', ->
+
+    it 'should respond using .mobile([int])', ->
+        el = 'ul.responsive'
+        ($j el).width 300
+        (new AwesomeGrid el).grid 2
+        .mobile 5
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 60
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{i*60}px"
+    it 'should apply gutters using .mobile([int], {column:[int],row:[int]})', ->
+        el = 'ul.responsive'
+        ($j el).width 300
+        (new AwesomeGrid el)
+        .gutters 10
+        .mobile 5,
+            column : 10
+            row : 10
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 52
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{(i*52)+(i*10)}px"
+    it 'should apply gutters using .mobile([int], [int])', ->
+        el = 'ul.responsive'
+        ($j el).width 300
+        (new AwesomeGrid el)
+        .gutters 10
+        .mobile 5, 10
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 52
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{(i*52)+(i*10)}px"
+
+describe 'When using a tablet (screen)', ->
+
+    it 'should respond using .tablet([int])', ->
+        el = 'ul.responsive'
+        ($j el).width 800
+        (new AwesomeGrid el)
+        .tablet 8
+        ($j el + ' > li').each (i, el) ->
             (expect ($j @).outerWidth()).toBe 100
             (expect $j @).toHaveClass "ag-col-#{i+1}"
             (expect $j @).toHaveCss
                 top: '0px'
                 left: "#{i*100}px"
-    ###
-    it 'should silently fail if DOM selector not found', (done) ->
-        (new AwesomeGrid 'ul.invalid')
-        .gutters
+    it 'should apply gutters using .tablet([int], {column:[int],row:[int]})', ->
+        el = 'ul.responsive'
+        ($j el).width 800
+        (new AwesomeGrid el)
+        .gutters 10
+        .tablet 6,
             column : 10
-            row    : 10
-        .grid 5
-        done()
-
+            row : 10
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 125
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{(i*125)+(i*10)}px"
+    it 'should apply gutters using .tablet([int], [int])', ->
+        el = 'ul.responsive'
+        ($j el).width 800
+        (new AwesomeGrid el)
+        .gutters 10
+        .tablet 6, 10
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 125
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{(i*125)+(i*10)}px"
 
 
 #
