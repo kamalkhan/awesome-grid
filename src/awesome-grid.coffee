@@ -169,9 +169,11 @@ class window.AwesomeGrid
                         children = arguments[0]
                     else children = arguments
                     for child in children
-                        li = document.createElement 'li'
-                        li.innerHTML = child
-                        el.appendChild li
+                        tag = el.children[0].tagName.toLowerCase()
+                        tel = document.createElement tag
+                        tel.innerHTML = child
+                        console.log tel
+                        el.appendChild tel
                     @_sync x
                     @__scroll.watch = null
     _doscroll : ->

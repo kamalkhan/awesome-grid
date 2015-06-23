@@ -277,7 +277,7 @@ Copyright (c) 2015 M. Kamal Khan <shout@bhittani.com>
           x = e;
           results.push(this.__scroll.fn((function(_this) {
             return function() {
-              var child, children, j, len1, li;
+              var child, children, j, len1, tag, tel;
               if (!arguments.length || !arguments[0]) {
                 _this.__scroll.watch = null;
                 return _this;
@@ -289,9 +289,11 @@ Copyright (c) 2015 M. Kamal Khan <shout@bhittani.com>
               }
               for (j = 0, len1 = children.length; j < len1; j++) {
                 child = children[j];
-                li = document.createElement('li');
-                li.innerHTML = child;
-                el.appendChild(li);
+                tag = el.children[0].tagName.toLowerCase();
+                tel = document.createElement(tag);
+                tel.innerHTML = child;
+                console.log(tel);
+                el.appendChild(tel);
               }
               _this._sync(x);
               return _this.__scroll.watch = null;
