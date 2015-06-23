@@ -49,6 +49,7 @@ describe 'Generally', ->
 
     Grid = null
     beforeEach -> Grid = (new AwesomeGrid 'ul.grid')
+
     it 'should spread children into * number of columns using .grid([int])', ->
         Grid.grid 5
         $li.each (i, el) ->
@@ -90,6 +91,26 @@ describe 'Generally', ->
                 left: "#{(ii*160)+(ii*10)}px"
             ii++
             if i is 2 then ii = 0
+    it 'should adopt new children using .adopt()', ->
+        $el = $j 'ul.watch'
+        Grid = (new AwesomeGrid 'ul.watch').grid 5
+        $el.append '<li>6</li>'
+        Grid.apply()
+        $li = $j '>li:last-child', $el
+        (expect $li.outerWidth()).toBe 100
+        (expect $li).toHaveClass 'ag-col-1'
+        (expect $li).toHaveCss
+            top: "#{$li.outerHeight()}px"
+            left: '0px'
+    ###
+    # Ignore the scroll test due to phantomjs browser.
+    it 'should allow providing new data when scrolled using .scroll([fn])', (done) ->
+        Grid.grid 5
+        .scroll (fn) ->
+            console.log fn
+            done()
+        ($j 'body,html').scrollTop 9999
+    ###
     it 'should silently fail if DOM selector isn\'t found', (done) ->
         (new AwesomeGrid 'ul.invalid')
         .gutters
@@ -99,6 +120,7 @@ describe 'Generally', ->
         done()
 
 describe 'With the help of data-ag-* attributes', ->
+
     it 'should allow for adding gutters using data attributes', ->
         (new AwesomeGrid 'ul.with-gutters1').grid 3
         ii = 0
@@ -253,5 +275,138 @@ describe 'When using a tablet (screen)', ->
                 top: '0px'
                 left: "#{(i*125)+(i*10)}px"
 
+describe 'When using a desktop (screen)', ->
 
-#
+    it 'should respond using .desktop([int])', ->
+        el = 'ul.responsive'
+        ($j el).width 1024
+        (new AwesomeGrid el)
+        .tablet 8
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 128
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{i*128}px"
+    it 'should apply gutters using .desktop([int], {column:[int],row:[int]})', ->
+        el = 'ul.responsive'
+        ($j el).width 1000
+        (new AwesomeGrid el)
+        .gutters 10
+        .tablet 5,
+            column : 10
+            row : 10
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 192
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{(i*192)+(i*10)}px"
+    it 'should apply gutters using .desktop([int], [int])', ->
+        el = 'ul.responsive'
+        ($j el).width 1000
+        (new AwesomeGrid el)
+        .gutters 10
+        .tablet 5, 10
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 192
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{(i*192)+(i*10)}px"
+
+describe 'When using a tv (screen)', ->
+
+    it 'should respond using .tv([int])', ->
+        el = 'ul.responsive'
+        ($j el).width 1400
+        (new AwesomeGrid el)
+        .tablet 7
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 200
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{i*200}px"
+    it 'should apply gutters using .tv([int], {column:[int],row:[int]})', ->
+        el = 'ul.responsive'
+        ($j el).width 1400
+        (new AwesomeGrid el)
+        .gutters 10
+        .tablet 6,
+            column : 10
+            row : 10
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 225
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{(i*225)+(i*10)}px"
+    it 'should apply gutters using .tv([int], [int])', ->
+        el = 'ul.responsive'
+        ($j el).width 1400
+        (new AwesomeGrid el)
+        .gutters 10
+        .tv 6, 10
+        ($j el + ' > li').each (i, el) ->
+            (expect ($j @).outerWidth()).toBe 225
+            (expect $j @).toHaveClass "ag-col-#{i+1}"
+            (expect $j @).toHaveCss
+                top: '0px'
+                left: "#{(i*225)+(i*10)}px"
+
+describe 'Events', ->
+
+    Grid = null
+    beforeEach -> Grid = (new AwesomeGrid 'ul.grid')
+    it 'should emit \'item:stacked\' when an item is stacked onto the grid', ->
+        e = 0
+        Grid.on 'item:stacked', (ev, el, row, column, device) ->
+            e++
+        .grid 5
+        (expect e).toBe 5
+    it 'should emit \'grid:done\' when grid is completely stacked', ->
+        e = 0
+        Grid.on 'grid:done', (ev, screen) ->
+            e++
+        .grid 5
+        (expect e).toBe 1
+    # Can not test this
+    it 'should emit \'grid:scrolled\' when grid is scrolled to the bottom', (done) ->
+        done()
+    # Can not test this
+    it 'should emit \'grid:device\' when grid changes its device (screen size)', (done) ->
+        Grid.on 'grid:device', (ev, device, previous) ->
+            (expect device).toEqual 'small'
+            done()
+        .grid 5
+    it 'should turn off an event when using .off([string], [fn])', ->
+        e = 0
+        fn = (ev, el, row, column, device) ->
+            e++
+        Grid.on 'item:stacked', fn
+        .off 'item:stacked', fn
+        .grid 5
+        (expect e).toBe 0
+    it 'should turn off all events of * when using .off([string])', ->
+        e = 0
+        fn1 = (ev, el, row, column, device) ->
+            e++
+        fn2 = (ev) ->
+            e++
+        Grid.on 'item:stacked', fn1
+        .on 'item:stacked', fn2
+        .off 'item:stacked'
+        .grid 5
+        (expect e).toBe 0
+    it 'should turn off all events when using .off()', ->
+        e = 0
+        fn1 = (ev, el, row, column, device) ->
+            e++
+        fn2 = (el) ->
+            e++
+        Grid.on 'item:stacked', fn1
+        .on 'item:stacked', fn2
+        .off()
+        .grid 5
+        (expect e).toBe 0

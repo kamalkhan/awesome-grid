@@ -11,8 +11,15 @@ class window.AwesomeGrid
     __els : []
     __kids : []
     __watch : null
+    __adopt : no
+    __width : null
+    __rows : [0]
     __columns : [0]
-    __devices : ['small']
+    __scroll :
+        watch  : null
+        fn     : null
+
+    __devices : null
     __current : null
     __screen : null
     __small : null
@@ -21,7 +28,18 @@ class window.AwesomeGrid
     __desktop : null
     __tv : null
 
-    constructor : (selector, isel = no) ->
+    __events : []
+
+    __context : null
+
+    @options :
+        context : 'window'
+        mobile  : 420
+        tablet  : 768
+        desktop : 992
+        tv      : 1200
+
+    constructor : (selector, args = AwesomeGrid.options, isel = no) ->
         @__els = if isel then [selector] else document.querySelectorAll selector
         return @ if not @__els
         for el,e in @__els
@@ -30,54 +48,33 @@ class window.AwesomeGrid
             for child in el.children
                 child.style.position = 'absolute'
                 child.style.margin = 0
-        @_reset()
-        @__current = @__small
+        @_reset @_merge AwesomeGrid.options, args
         @_respond()
+        @_docontext()
         @_doresize()
+        @_doscroll()
 
-    _reset : ->
+    _make : (name, screen) ->
+        {
+            device  : name
+            screen  : screen
+            columns : 1
+            gutters :
+                column : 0
+                row    : 0
+                force  : no
+        }
+
+    _reset : (options) ->
+        @__context = options.context
+        @__small   = @_make 'small',   0
+        @__mobile  = @_make 'mobile',  options.mobile
+        @__tablet  = @_make 'tablet',  options.tablet
+        @__desktop = @_make 'desktop', options.desktop
+        @__tv      = @_make 'tv',      options.tv
         @__columns = [0]
         @__devices = ['small']
-        @__small =
-            device  : 'small'
-            screen  : 0
-            columns : 1
-            gutters :
-                column : 0
-                row    : 0
-                force  : no
-        @__mobile =
-            device  : 'mobile'
-            screen  : 420
-            columns : 1
-            gutters :
-                column : 0
-                row    : 0
-                force  : no
-        @__tablet =
-            device  : 'tablet'
-            screen  : 768
-            columns : 1
-            gutters :
-                column : 0
-                row    : 0
-                force  : no
-        @__desktop =
-            device  : 'desktop'
-            screen  : 992
-            columns : 1
-            gutters :
-                column : 0
-                row    : 0
-                force  : no
-        @__tv =
-            device  : 'tv'
-            screen  : 1200
-            columns : 1
-            gutters :
-                column : 0
-                row    : 0
-                force  : no
+        @__current = {}#@__small
 
     _device : (which, columns, gutters, force) ->
         return @ if not @__els
@@ -96,30 +93,101 @@ class window.AwesomeGrid
 
     _respond : (size = window.innerWidth) ->
         #size = window.innerWidth
-        @__screen = switch
-            when size >= @__tv.screen      then @__tv
-            when size >= @__desktop.screen then @__desktop
-            when size >= @__tablet.screen  then @__tablet
-            when size >= @__mobile.screen  then @__mobile
-            else @__small
-        @__current = switch
-            when @__screen.device in @__devices then @__screen
-            when @__screen.device is 'tv' and 'tv' in @__devices then @__tv
-            when @__screen.device in ['tv', 'desktop'] and 'desktop' in @__devices then @__desktop
-            when @__screen.device in ['tv', 'desktop', 'tablet'] and 'tablet' in @__devices then @__tablet
-            when @__screen.device in ['tv', 'desktop', 'tablet', 'mobile'] and 'mobile' in @__devices then @__mobile
-            else @__small
-        @grid off
+        respond = (size, els) =>
+            @__screen = switch
+                when size >= @__tv.screen      then @__tv
+                when size >= @__desktop.screen then @__desktop
+                when size >= @__tablet.screen  then @__tablet
+                when size >= @__mobile.screen  then @__mobile
+                else @__small
+            device = @__current.device
+            @__current = switch
+                when @__screen.device in @__devices then @__screen
+                when @__screen.device is 'tv' and 'tv' in @__devices then @__tv
+                when @__screen.device in ['tv', 'desktop'] and 'desktop' in @__devices then @__desktop
+                when @__screen.device in ['tv', 'desktop', 'tablet'] and 'tablet' in @__devices then @__tablet
+                when @__screen.device in ['tv', 'desktop', 'tablet', 'mobile'] and 'mobile' in @__devices then @__mobile
+                else @__small
+            if @__current.device isnt device
+                @_emit 'grid:device', null, [@__current.device, device]
+            @grid off, els
+
+        if @__context is 'self'
+            for el in @__els
+                respond el.offsetWidth, [el]
+        else respond size, @__els
+
+    _docontext : ->
+        return null if @__context isnt 'self'
+        @_respond()
+        @__watch = setTimeout =>
+            @_docontext()
+        , 220 # 50fps
 
     _doresize : ->
-        resizeTimeout = null
+        return null if @__context is 'self'
+        timeout = null
         window.addEventListener 'resize', =>
-            if not resizeTimeout?
-                resizeTimeout = setTimeout =>
-                    resizeTimeout = null
+            if not timeout?
+                timeout = setTimeout =>
+                    timeout = null
                     @_respond()
                 , 66 # 15fps
         , yes
+
+    _grow : ->
+        # X do not return in order to emit scroll event
+        return @ if not @__scroll.fn? or @__scroll.watch?
+        for el,e in @__els
+            style = getComputedStyle el
+            height = parseInt style.getPropertyValue 'height'
+            ### should we use this?
+            offsetTop = ((el) ->
+                box = el.getBoundingClientRect()
+                body = document.body;
+                docEl = document.documentElement;
+                scrollTop = window.pageYOffset or docEl.scrollTop or body.scrollTop
+                scrollLeft = window.pageXOffset or docEl.scrollLeft or body.scrollLeft
+                clientTop = docEl.clientTop or body.clientTop or 0
+                clientLeft = docEl.clientLeft or body.clientLeft or 0
+                top  = box.top +  scrollTop - clientTop
+                #left = box.left + scrollLeft - clientLeft
+                Math.round top
+            ) el
+            ###
+            if document.body.scrollTop >= height + el.offsetTop - window.innerHeight
+                @_emit 'grid:scrolled', el, [@__current.device]
+                #return @ if (not @__scroll.fn?) or @__scroll.watch?
+                @__scroll.watch = yes
+                x = e # why does e change inside the callback :(
+                @__scroll.fn =>
+                    if not arguments.length or not arguments[0]
+                        @__scroll.watch = null
+                        return @
+                    if arguments[0].constructor is Array
+                        children = arguments[0]
+                    else children = arguments
+                    for child in children
+                        li = document.createElement 'li'
+                        li.innerHTML = child
+                        el.appendChild li
+                    @_sync x
+                    @__scroll.watch = null
+    _doscroll : ->
+        timeout = null
+        window.addEventListener 'scroll', =>
+            if not timeout?
+                timeout = setTimeout =>
+                    timeout = null
+                    @_grow()
+                , 66 # 15fps
+        , yes
+
+    _isInt : (n) ->
+        # http://stackoverflow.com/questions/14636536/#14794066
+        n? and (not isNaN n) and (
+            ((z) -> (z | 0) is z ) parseFloat n
+        )
 
     _clone : (obj) ->
         return obj if not obj? or typeof obj isnt 'object'
@@ -127,13 +195,16 @@ class window.AwesomeGrid
         temp[key] = @_clone(obj[key]) for key of obj
         temp
 
+    _merge : (obj1, obj2) ->
+        obj = @_clone obj1
+        for key,val of obj2
+            obj[key] = val
+        obj
+
     _x : (el, max) ->
         size = 1
         x = el.getAttribute 'data-ag-x'
-        # http://stackoverflow.com/questions/14636536/#14794066
-        size = parseInt x if x? and (not isNaN x) and (
-            ((z) -> (z | 0) is z ) parseFloat x
-        )
+        size = parseInt x if @_isInt x
         if size > max then max else if size < 1 then 1 else size
 
     _spacing : (el) ->
@@ -173,28 +244,74 @@ class window.AwesomeGrid
             className = className.trim() + ' '
         className
 
+    _emit : (event, context, args) ->
+        for ev in @__events
+            if ev[0] is event
+                ev[1].apply context, [event].concat args
+
     _gutters : (obj) ->
         return @ if not @__els or not obj?
-        gutters
-        if (not isNaN obj) and (((z) -> (z | 0) is z ) parseFloat obj)
-            return {
-                column : parseInt obj
-                row    : parseInt obj
-            }
+        return {
+            column : parseInt obj
+            row    : parseInt obj
+        } if @_isInt obj
         gutters =
             column : @__small.gutters.column
             row    : @__small.gutters.row
-        gutters.column = parseInt obj.column if obj.column? and (
-            not isNaN obj.column
-        ) and (
-            ((z) -> (z | 0) is z ) parseFloat obj.column
-        )
-        gutters.row = parseInt obj.row if obj.row? and (
-            not isNaN obj.row
-        ) and (
-            ((z) -> (z | 0) is z ) parseFloat obj.row
-        )
+        gutters.column = parseInt obj.column if @_isInt obj.column
+        gutters.row = parseInt obj.row if @_isInt obj.row
         gutters
+
+    _grid : (pel, el, columns, dynamic = no) ->
+        if dynamic
+            el.style.position = 'absolute'
+            el.style.margin = 0
+        # column index
+        c = @_midget()
+        # data-x
+        size = @_x el, columns
+        if (c + size) > columns
+            c -= c + size - columns
+        # left position
+        left = (c * @__width) + (c * @__current.gutters.column)
+        # width
+        w = (size * @__width) + ((size - 1) * @__current.gutters.column)
+        # padding and border
+        s = @_spacing el
+        # tallest columns
+        tallest = @_giant c, c + size - 1
+        # apply styling
+        el.style.width = "#{w - s.pl - s.pr - s.bl - s.br}px"
+        el.style.top   = "#{@__columns[tallest]}px"
+        el.style.left  = "#{left}px"
+        el.className   = @_clearClass el
+        @__columns[tallest] = @__columns[tallest] + el.offsetHeight + @__current.gutters.row
+        # apply class names (ag-row-* and ag-col-*)
+        space = ''
+        tr = []
+        cols = []
+        rows = []
+        for ci in [c..(c + size - 1)]
+            el.className += "#{space}ag-col-#{ci+1}"
+            el.className += " ag-row-#{@__rows[ci]+1}" if @__rows[ci] not in tr
+            tr.push @__rows[ci]
+            @__rows[ci]++
+            space = ' '
+            @__columns[ci] = @__columns[tallest]
+            cols.push (ci + 1)
+            rows.push @__rows[ci]
+        # enlarge container
+        pel.style.height = "#{@__columns[@_giant()]}px"
+        # event
+        @_emit 'item:stacked', el, [pel, rows, cols, @__current.device]
+
+    _sync : (e) ->
+        kids = @__kids[e]
+        children = @__els[e].children.length
+        if children > kids
+            @__kids[e] = children
+            for c in [kids...children]
+                @_grid @__els[e], @__els[e].children[c], @__columns.length, yes
 
     gutters : (obj, force = no, device = @__small) ->
         return @ if not @__els
@@ -205,86 +322,43 @@ class window.AwesomeGrid
             force  : if force then yes else no
         @
 
-    grid : (columns) ->
+    grid : (columns, els = @__els) ->
         return @ if not @__els
         @__small.columns = columns if columns
         device = @__current
         columns = device.columns
-        return @ if not ((not isNaN columns) and (
-            ((z) -> (z | 0) is z ) parseFloat columns
-        ))
-        for el in @__els
+        return @ if not @_isInt columns
+        for el in els
             # columns
             @__columns = (0 for [1..columns])
-            rows = @__columns.slice 0
-            # data-ag-gutters
+            @__rows = @__columns.slice 0
             gutters = @_clone device.gutters
+            # data-ag-gutters
             if not gutters.force
                 @gutters (el.getAttribute 'data-ag-gutters') or (
                     column : el.getAttribute 'data-ag-gutters-column'
                     row    : el.getAttribute 'data-ag-gutters-row'
-                )
-            width = (el.offsetWidth - ((columns - 1) * device.gutters.column)) / columns
+                ), device
+            @__width = (el.offsetWidth - ((columns - 1) * device.gutters.column)) / columns
             for child in el.children
-                child.style.position = 'absolute' # if added dynamically
-                child.style.margin = 0 # if added dynamically
-                # column index
-                c = @_midget()
-                # data-x
-                size = @_x child, columns
-                if (c + size) > columns
-                    c -= c + size - columns
-                # left position
-                left = (c * width) + (c * device.gutters.column)
-                # width
-                w = (size * width) + ((size - 1) * device.gutters.column)
-                # padding and border
-                s = @_spacing child
-
-                tallest = @_giant c, c + size - 1
-
-                child.style.width = "#{w - s.pl - s.pr - s.bl - s.br}px"
-                child.style.top   = "#{@__columns[tallest]}px"
-                child.style.left  = "#{left}px"
-                child.className   = @_clearClass child
-                @__columns[tallest] = @__columns[tallest] + child.offsetHeight + device.gutters.row
-                space = ''
-                tr = []
-                for ci in [c..(c + size - 1)]
-                    child.className += "#{space}ag-col-#{ci+1}"
-                    child.className += " ag-row-#{rows[ci]+1}" if rows[ci] not in tr
-                    tr.push rows[ci]
-                    rows[ci]++
-                    space = ' '
-                    @__columns[ci] = @__columns[tallest]
-
-                el.style.height = "#{@__columns[@_giant()]}px"
+                @_grid el, child, columns
             device.gutters = gutters
+            # event
+            @_emit 'grid:done', el, [device.device]
         @
 
-    watch : (w = yes)->
-        return @ if not @__els
-        if not w
-            clearTimeout @__watch if @__watch?
-            return @
+    apply : ->
         for kids,e in @__kids
-            children = @__els[e].children.length
-            if children > kids
-                @__kids[e] = children
-                @grid @__columns.length
-                break
-        t = 66
-        t = parseInt w if (not isNaN w) and (
-            ((z) -> (z | 0) is z ) parseFloat w
-        )
-        @__watch = setTimeout =>
-            @watch w
-        , t
+            @_sync e
         @
 
-    stop : ->
-        return @ if not @__els
-        @watch no
+    scroll : (fn) ->
+        if fn is off
+            @__scroll.fn = null
+            @__scroll.watch  = null
+            return @
+        return @ if typeof fn isnt 'function'
+        @__scroll.fn = fn
         @
 
     mobile : (columns, gutters = {}, force = no) ->
@@ -303,10 +377,26 @@ class window.AwesomeGrid
         @_device 'tv', columns, gutters, force
         @
 
+    on : (event, fn) ->
+        return @ if typeof fn isnt 'function'
+        @__events.push [event, fn]
+        @
+
+    off : (event, fn = null) ->
+        if not event?
+            @__events = []
+            return @
+        events = []
+        for ev, e in @__events
+            if ev[0] isnt event or (fn? and fn.toString() isnt ev[1].toString())
+                events.push ev
+        @__events = events
+        @
+
 # Launch grids based on data-attribute
 window.addEventListener 'load', ->
     for el in (document.querySelectorAll '[data-awesome-grid]')
-        (new AwesomeGrid el, yes).grid el.getAttribute 'data-awesome-grid'
+        (new AwesomeGrid el, AwesomeGrid.options, yes).grid el.getAttribute 'data-awesome-grid'
 , yes
 
 # Support AMD (requirejs)
