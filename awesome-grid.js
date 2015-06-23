@@ -292,7 +292,6 @@ Copyright (c) 2015 M. Kamal Khan <shout@bhittani.com>
                 tag = el.children[0].tagName.toLowerCase();
                 tel = document.createElement(tag);
                 tel.innerHTML = child;
-                console.log(tel);
                 el.appendChild(tel);
               }
               _this._sync(x);

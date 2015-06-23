@@ -172,7 +172,6 @@ class window.AwesomeGrid
                         tag = el.children[0].tagName.toLowerCase()
                         tel = document.createElement tag
                         tel.innerHTML = child
-                        console.log tel
                         el.appendChild tel
                     @_sync x
                     @__scroll.watch = null
