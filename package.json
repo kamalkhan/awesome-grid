@@ -16,12 +16,12 @@
     "layout",
     "responsive"
   ],
-  "author": "kamalkhan <kamal@bhittani.com> (http://bhittani.com/)",
+  "author": "M. Kamal Khan <shout@bhittani.com> (http://bhittani.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kamalkhan/awesome-grid/issues"
   },
-  "homepage": "https://github.com/kamalkhan/awesome-grid",
+  "homepage": "http://awe5o.me/js/grid",
   "devDependencies": {
     "coffee-script": "^1.9.0",
     "gulp": "^3.8.11",
