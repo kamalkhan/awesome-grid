@@ -3,7 +3,7 @@ Awesome Grid
 A minimalist javascript library that allows you to display a responsive grid layout stacked on top of each other into rows and columns. Since v2.0.0, jQuery is not a dependency.
 
 **Table of contents**
-<!-- TOC depth:6 withLinks:1 updateOnSave:1 -->
+
 - [Browser support](#browser-support)
 - [Install](#install)
 - [Usage](#usage)
@@ -30,7 +30,6 @@ A minimalist javascript library that allows you to display a responsive grid lay
 	- [Build](#build)
 	- [Test & Build](#test-build)
 - [License](#license)
-<!-- /TOC -->
 
 ---
 # Browser support
