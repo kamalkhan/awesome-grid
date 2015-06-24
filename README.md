@@ -22,6 +22,9 @@ A minimalist javascript library that allows you to display a responsive grid lay
 	- [`grid:done`](#griddone)
 	- [`grid:scrolled`](#gridscrolled)
 	- [`grid:device`](#griddevice)
+	- [Turn off all events](#turn-off-all-events)
+	- [Turn off specific events](#turn-off-specific-events)
+	- [Turn off an event](#turn-off-an-event)
 - [Development](#development)
 	- [Test](#test)
 	- [Build](#build)
@@ -335,11 +338,88 @@ new AwesomeGrid('ul.grid')
 * `.on('grid:done', [function])`
 * `.on('grid:scrolled', [function])`
 * `.on('grid:device', [function])`
+* `.off()`
+* `.off([string])`
+* `.off([string], [function])`
 
 ## `item:stacked`
+The event will be triggered whenever a child item gets stacked on to the grid.
+```js
+new AwesomeGrid('ul.grid')
+.on('item:stacked', function(event, element, rows, columns, device){
+	console.log(this);    // item
+	console.log(event);   // event name
+	console.log(element); // grid container
+	console.log(rows);    // array of row numbers
+	console.log(columns); // array of column numbers
+	console.log(device);  // device screen name
+}).grid(5);
+```
+
 ## `grid:done`
+When the grid stack is complete, this event will be triggered.
+```js
+new AwesomeGrid('ul.grid')
+.on('grid:done', function(event, device){
+	console.log(this);   // grid container
+	console.log(event);  // event name
+	console.log(device); // device screen name
+}).grid(5);
+```
+
 ## `grid:scrolled`
+This event will be triggered when the scrollbar gets past the bottom edge of the grid.
+```js
+new AwesomeGrid('ul.grid')
+.on('grid:scrolled', function(event, device){
+	console.log(this);   // grid container
+	console.log(event);  // event name
+	console.log(device); // device screen name
+}).grid(5);
+```
+
 ## `grid:device`
+Whenever the device screen size changes, this event will be fired.
+```js
+new AwesomeGrid('ul.grid')
+.on('grid:device', function(device, previous){
+	console.log(device);   // device screen name
+	console.log(previous); // previous screen name
+}).grid(5);
+```
+
+## Turn off all events
+To turn off all events, simply call `.off()`
+```js
+new AwesomeGrid('ul.grid')
+.on(...)
+.on(...)
+...
+...
+.off();
+```
+
+## Turn off specific events
+To turn off all events of a specific type, simply call `.off([string:event-name])`
+```js
+new AwesomeGrid('ul.grid')
+.on('item:stacked', callback_fn)
+.on(...)
+...
+...
+.off('item:stacked');
+```
+
+## Turn off an event
+To turn off an event, simply call `.off([string:event-name], [function])`
+```js
+new AwesomeGrid('ul.grid')
+.on('item:stacked', callback_fn)
+.on(...)
+...
+...
+.off('item:stacked', callback_fn);
+```
 
 # Development
 
