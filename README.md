@@ -1,4 +1,4 @@
-Awesome Grid
+Awesome Grid [![Build Status](https://travis-ci.org/kamalkhan/awesome-grid.svg?branch=master)](https://travis-ci.org/kamalkhan/awesome-grid)
 ======
 A minimalist javascript library that allows you to display a responsive grid layout stacked on top of each other into rows and columns. Since v2.0.0, jQuery is not a dependency.
 
