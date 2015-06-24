@@ -91,7 +91,7 @@ describe 'Generally', ->
                 left: "#{(ii*160)+(ii*10)}px"
             ii++
             if i is 2 then ii = 0
-    it 'should adopt new children using .adopt()', ->
+    it 'should adopt new children using .apply()', ->
         $el = $j 'ul.watch'
         Grid = (new AwesomeGrid 'ul.watch').grid 5
         $el.append '<li>6</li>'
