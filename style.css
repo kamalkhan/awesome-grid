@@ -1,0 +1,43 @@
+nav .container-fluid {
+    margin: .75em;
+}
+.main {
+    padding: 2em;
+}
+.grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.grid li {
+    padding: 1.75em;
+    color: #949597;
+    background-color: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: .25em;
+    box-sizing: initial;
+}
+.grid li:after {
+    content: "";
+    width: 99%;
+    height: 1px;
+    margin-top: 20px;
+    margin-left: -22px;
+    display: block;
+    position: absolute;
+    z-index: -1;
+    -webkit-box-shadow: 0px 0px 8px 2px #000000;
+    -moz-box-shadow: 0px 0px 8px 2px #000000;
+    box-shadow: 0px 0px 8px 0px #000000;
+}
+pre {
+    text-align: left;
+}
+.hljs {
+    padding: .75em;
+    margin: -1.75em 0;
+}
+.gh-btn {
+    margin-left: 1.75em;
+    margin-top: 0.5em;
+}
