@@ -1,6 +1,5 @@
 ###
 AwesomeGrid v2.0.0
-http://awe5o.me/js/grid
 https://github.com/kamalkhan/awesome-grid
 A minimalist javascript library that allows you to display a responsive grid
 layout stacked on top of each other into rows and columns.

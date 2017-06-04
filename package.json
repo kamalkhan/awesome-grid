@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/kamalkhan/awesome-grid/issues"
   },
-  "homepage": "http://awe5o.me/js/grid",
+  "homepage": "https://github.com/kamalkhan/awesome-grid",
   "devDependencies": {
     "coffee-script": "^1.9.0",
     "gulp": "^3.8.11",
