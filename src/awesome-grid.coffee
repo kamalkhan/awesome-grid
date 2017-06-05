@@ -6,7 +6,7 @@ layout stacked on top of each other into rows and columns.
 The MIT License (MIT)
 Copyright (c) 2015 M. Kamal Khan <shout@bhittani.com>
 ###
-class window.AwesomeGrid
+class AwesomeGrid
 
     __els : []
     __kids : []
@@ -400,6 +400,14 @@ window.addEventListener 'load', ->
         (new AwesomeGrid el, AwesomeGrid.options, yes).grid el.getAttribute 'data-awesome-grid'
 , yes
 
+# Support global window
+if window?
+    window.AwesomeGrid = AwesomeGrid
+
 # Support AMD (requirejs)
-if (typeof window.define is 'function') and window.define.amd
-    window.define 'AwesomeGrid', [], -> window.AwesomeGrid
+if (typeof define is 'function') and define.amd
+    define 'AwesomeGrid', [], -> AwesomeGrid
+
+# Support CommonJS (npm)
+if module?.exports
+    module.exports = AwesomeGrid
